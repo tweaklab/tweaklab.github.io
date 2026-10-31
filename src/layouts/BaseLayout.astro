@@ -1,0 +1,80 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+}
+
+const {
+  title = 'TweakLab',
+  description = '개발하면서 정리한 내용을 기록하는 기술 블로그',
+  image = '/og-default.svg',
+  type = 'website',
+} = Astro.props;
+
+const siteTitle = title === 'TweakLab' ? title : `${title} · TweakLab`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(image, Astro.site);
+const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{siteTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title="TweakLab RSS" href="/rss.xml" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="TweakLab" />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    {adsenseClient && (
+      <script
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+        crossorigin="anonymous"
+      ></script>
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="/" aria-label="TweakLab 홈">
+          <span>TweakLab</span>
+        </a>
+        <nav aria-label="주요 메뉴">
+          <a href="/blog/">Blog</a>
+          <a href="/tags/">Tags</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main-content">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <p class="copyright">© {new Date().getFullYear()} TweakLab</p>
+        <div class="footer-links">
+          <a href="/privacy/">개인정보처리방침</a>
+          <a href="/rss.xml">RSS</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

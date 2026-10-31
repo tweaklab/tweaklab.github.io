@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { visiblePosts } from '../../lib/posts';
+
+const posts = visiblePosts(await getCollection('blog'));
+const counts = new Map<string, number>();
+posts.forEach((post) => post.data.tags.forEach((tag) => counts.set(tag, (counts.get(tag) ?? 0) + 1)));
+const tags = [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0], 'ko'));
+---
+
+<BaseLayout title="Tags" description="TweakLab 글의 주제별 태그">
+  <section class="page-head shell">
+    <h1>Tags</h1>
+  </section>
+  <section class="section shell">
+    {tags.length > 0 ? (
+      <div class="tag-cloud">{tags.map(([tag, count]) => <a href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}<sup>{count}</sup></a>)}</div>
+    ) : (
+      <p class="empty-state">아직 태그가 없습니다.</p>
+    )}
+  </section>
+</BaseLayout>

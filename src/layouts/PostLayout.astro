@@ -1,0 +1,36 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { formatDate } from '../lib/posts';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const hero = typeof post.data.heroImage === 'string' ? post.data.heroImage : post.data.heroImage.src;
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} image={hero} type="article">
+  <article class="article-shell">
+    <header class="article-header shell-narrow">
+      <h1>{post.data.title}</h1>
+      <p class="article-description">{post.data.description}</p>
+      <div class="article-meta">
+        <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
+        {post.data.updatedAt && <span>수정 {formatDate(post.data.updatedAt)}</span>}
+        <span>{post.data.tags.join(' · ')}</span>
+      </div>
+    </header>
+    <figure class="hero-frame shell">
+      <img src={hero} alt={post.data.heroAlt} width="1440" height="810" loading="eager" />
+    </figure>
+    <div class="article-grid shell-narrow">
+      <div class="prose">
+        <slot />
+        <AdSlot slot={import.meta.env.PUBLIC_ADSENSE_SLOT_ARTICLE} />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
