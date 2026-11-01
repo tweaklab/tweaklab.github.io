@@ -7,9 +7,13 @@ interface Props {
 }
 
 const { post } = Astro.props;
+const hero = typeof post.data.heroImage === 'string' ? post.data.heroImage : post.data.heroImage.src;
 ---
 
 <article class="post-card">
+  <a class="card-thumbnail" href={postPath(post)} aria-label={`${post.data.title} 읽기`}>
+    <img src={hero} alt="" width="320" height="180" loading="lazy" />
+  </a>
   <div class="card-body">
     <div class="card-meta">
       <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
