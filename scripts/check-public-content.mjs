@@ -8,7 +8,8 @@ const findings = [];
 const builtInRules = [
   { label: '이메일 주소', pattern: /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi },
   { label: '휴대전화 번호', pattern: /01[016789][-.\s]?\d{3,4}[-.\s]?\d{4}/g },
-  { label: '주민등록번호 형태', pattern: /\b\d{6}[-\s]?\d{7}\b/g },
+  // Check the YYMMDD prefix so arbitrary 13-digit values (such as epoch milliseconds) do not match.
+  { label: '주민등록번호 형태', pattern: /\b\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[-\s]?\d{7}\b/g },
   { label: '작성자 메타데이터', pattern: /^\s*(author|company|employer|gender|age)\s*:/gim },
 ];
 
